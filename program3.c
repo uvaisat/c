@@ -9,7 +9,7 @@ void enqueue(int);
 int dequeue(), item, opt;
 void display();
 do{
-printf("1.Insert\n2.delete\n3.Display\n4.Exit\n");
+printf("\n1.Insert\n2.delete\n3.Display\n4.Exit\n");
 printf("Enter your choice: ");
 scanf("%d",&opt);
 switch(opt){
@@ -24,7 +24,8 @@ break;
 case 3:
 display();
 break;
-case 4:exit(0);	
+case 4:exit(0);
+default:printf("Invalid choice");
 }
 }
 while(9);
@@ -60,10 +61,10 @@ printf("No data...");
 else{
 i=(front+1)%SIZE;
 do{
-printf("%d",que[i]);
+printf("%d ",que[i]);
 i=(i+1)%SIZE;
 }
-while(i!=front);
+while(i!=(rear+1)%SIZE);
 }
 return;
 }
