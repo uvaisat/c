@@ -35,6 +35,7 @@ break;
 case 4:
 printf("Enter the elements to searched :");
 scanf("%d",&data);
+found = search(sp,data);
 if(found!=0)
 printf("The element %d is found\n",data);
 else
@@ -48,8 +49,7 @@ printf("Invalid choice\n;");
 }
 return 0;
 }
-//Function to push an element
-struct node *push(struct node *sp, int data){
+struct node *push(struct node *sp, int data){   //Function to push an element
 struct node *temp;
 temp=(struct node*)malloc(sizeof(struct node));
 temp->data=data;
@@ -57,8 +57,7 @@ temp->next=sp;
 sp=temp;
 return sp;
 }
-//Function to remove an element
-struct node *pop(struct node *sp, int *x){
+struct node *pop(struct node *sp, int *x){   //Function to remove an element
 struct node *temp;
 if(sp!=NULL){
 temp=sp;
@@ -76,11 +75,10 @@ return;
 }
 printf("Stack elements:\n");
 while(sp!=NULL){
-printf("%d\n",sp->data);
+printf("%d  ",sp->data);
 sp=sp->next;
-}
-}
-//Function to search an element in the stack 
+}}
+//Function to search an element in the stack
 int search(struct node *sp, int data){
 while(sp !=NULL){
 if(sp->data==data)
