@@ -1,118 +1,106 @@
 #include<stdio.h>
 #include<stdlib.h>
-struct node
-{
+struct node{
 int data;
 struct node *lchild,*rchild;
 };
-void main()
-{
-int ch,data;
-struct node *search(struct node*,int);
-struct node *insert(struct node*,int);
-void inorder(struct node*);
-struct node *delete(struct node*,int);
-//null BST
-struct node *root=0;
-struct node *temp;
-while (1)
-{
-printf("\n1.Insert\n2.Search\n3.Inorder\n4.Delete\n5.Exit");
-printf("\nEnter choice: ");
-scanf("%d", &ch);
-switch (ch)
-{
+void main(){
+struct node *insert(struct node *,int);
+struct node *delete(struct node *,int);
+struct node *search(struct node *,int);
+void inorder(struct node *);
+struct node *root=0; //NULL bst
+int opt,data;
+do{
+printf("\n1.Insert\n2.Delete\n3.Search\n4.Inorder Traversal\n5.Exit\n");
+printf("Enter your choice: ");
+scanf("%d",&opt);
+switch(opt){
 case 1:
-printf("Enter data: ");
-scanf("%d", &data);
-root = insert(root, data);
+printf("Enter data to insert: ");
+scanf("%d",&data);
+root=insert(root, data);
 break;
 case 2:
-printf("Enter data to search: ");
-scanf("%d", &data);
-temp = search(root, data);
-if (temp != 0)
-printf("Data found");
-else
-printf("Data not found");
+if(root==NULL)
+printf("BST is empty!\n");
+else{
+printf("Enter data to delete: ");
+scanf("%d",&data);
+root=delete(root, data);
+if(root == NULL)
+printf("BST is empty!\n");
+}
 break;
 case 3:
-printf("Inorder: ");
-inorder(root);
+printf("Enter data to search: ");
+scanf("%d",&data);
+if(search(root,data)!=0)
+printf("%d found in BST.",data);
+else
+printf("%d not found in BST.",data);
 break;
 case 4:
-printf("Enter data to delete: ");
-scanf("%d", &data);
-root = delete(root, data);
+if(root == NULL)
+printf("BST is empty!\n");
+else{
+printf("Inorder traversal: ");
+inorder(root);
+}
 break;
 case 5:
 exit(0);
 }
+}while(9);
 }
-}
-//function to search a node
-struct node *search(struct node *root,int data)
-{
+//function to search an item in bst.
+struct node *search(struct node *root,int data){
 while(root!=0 && root->data!=data)
-{ 
 if(data<root->data)
 root=root->lchild;
 else
 root=root->rchild;
+return root;
+}
+//function to insert  an item in bst.
+struct node *insert(struct node *root,int data){
+struct node *t,*par=0,*t1;
+t=(struct node *)malloc(sizeof(struct node));
+t->data=data;
+t->lchild=t->rchild=0;
+if(root==0)
+root=t;
+else if(search(root,data)!=0)
+printf("%d is duplicated.",data);
+else{
+t1=root;
+while(t1!=0){//To find the location to be insert a data.
+par=t1;
+if(data<t1->data)
+t1=t1->lchild;
+else
+t1=t1->rchild;
+}
+if(data<par->data)
+//inserting.
+par->lchild=t;
+else
+par->rchild=t;
 }
 return root;
 }
-//function to insert an item
-struct node *insert(struct node *root, int data)
-{
-struct node *t, *par = 0, *t1;
-t = (struct node*)malloc(sizeof(struct node));
-t->data = data;
-t->lchild = t->rchild = 0;
-if (root == 0)
-{
-root = t;
-}
-else if (search(root,data) != NULL)
-{
-printf("%d is Duplicate data",data);
-}
-else
-{
-t1 = root;
-//finding inserting location
-while (t1 != 0)
-{
-par = t1;
-if (data < t1->data)
-t1 = t1->lchild;
-else
-t1 = t1->rchild;
-}
-// inserting
-if (data < par->data)
-par->lchild = t;
-else
-par->rchild = t;
-}
-return root;
-}
-//function to traverse BST in inorder
-void inorder(struct node *root)
-{
-if(root!=0)
-{
+//function to display bst in inorder.
+void inorder(struct node *root){
+if(root!=0){
 inorder(root->lchild);
-printf("%d,",root->data);
-inorder(root->rchild);
+printf("%d ",root->data);
+inorder(root->rchild);}
 }
-}
-//function to delete a node
-struct node *delete(struct node *root,int data)
-{
-struct node *t=root,*par=0 ,*suc,*sucpar;
-while(t!=0 && t->data!=data)
-{
+//function to delete an item in bst.
+struct node *delete(struct node *root,int data){
+struct node *t=root,*par=0,*suc,*sucpar;
+//we have to find inorder successor.
+while(t!=0 && t->data!=data){
 par=t;
 if(data<t->data)
 t=t->lchild;
@@ -120,45 +108,39 @@ else
 t=t->rchild;
 }
 if(t==0)
-printf("%d not found",data);
-else
+printf("%d not found.",data);
+else{
+if(t->lchild==0 && t->rchild==0)//case of leaf node.
 {
-//case of leaf node
-if(t->lchild==0 &&t->rchild ==0)
-{
-if(par==0)
+if(par==0)//root is to be deleted node.
 root=0;
 else if(data<par->data)
 par->lchild=0;
 else
 par->rchild=0;
 }
-//case of one child
-else if(t->lchild==0 || t->rchild==0)
+else if(t->lchild==0 || t->rchild==0) // case of one child.
 {
-if(par==0)
-root=root->lchild==0?root->rchild:root->lchild;
+if(par==0)//root is to be deleted.
+root=root->lchild==0 ? root->rchild:root->lchild;
 else if(data<par->data)
-par->lchild=t->lchild==0?t->rchild:t->lchild;
+par->lchild=t->lchild==0 ? t->rchild:t->lchild;
 else
-par->rchild=t->lchild==0?t->rchild:t->lchild;
+par->rchild=t->lchild==0 ? t->rchild:t->lchild;
 }
-//case of two child
-else
+else//case of two children.
 {
 sucpar=t;
- suc=t->rchild;
-//finding inorder successor
-while(suc->lchild!=0)
+suc=t->rchild;
+while(suc->lchild!=0)//finding inorder successor.
 {
 sucpar=suc;
 suc=suc->lchild;
-} t->data=suc->data;
-//delete inorder successor
-if(suc->data<sucpar->data)
-{
- sucpar->lchild=suc->rchild;
 }
+t->data=suc->data;
+//delete inorder succssor.
+if(suc->data<sucpar->data)
+sucpar->lchild=suc->rchild;
 else
 sucpar->rchild=suc->rchild;
 t=suc;
@@ -167,6 +149,3 @@ free(t);
 }
 return root;
 }
-
-
- 
